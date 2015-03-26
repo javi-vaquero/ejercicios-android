@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.javivaquero.earthquakeapp.DetailActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/eqID"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="id" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/eqPlace"
+        android:layout_below="@+id/eqID"
+        android:layout_centerHorizontal="true"
+        android:textIsSelectable="false"
+        android:textSize="56dp"
+        android:textAlignment="gravity"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="PLACE" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/eqMagnitude"
+        android:textSize="56dp"
+        android:text="magnitude"
+        android:layout_below="@+id/eqCoordinates"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Coordinates"
+        android:id="@+id/eqCoordinates"
+        android:layout_below="@+id/eqPlace"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="date"
+        android:id="@+id/eqDate"
+        android:layout_below="@+id/eqMagnitude"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>

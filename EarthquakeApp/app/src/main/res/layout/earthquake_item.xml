@@ -9,7 +9,6 @@
         android:id="@+id/magnitude"
         android:layout_weight="4"
         android:textSize="25dp"
-        android:textColor="#FF0000"
         android:textAlignment="gravity"
         android:gravity="center_vertical|center_horizontal"
         android:background="#ffe7e7e7" />
@@ -32,6 +31,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/date"
             android:textSize="12dp"
-            android:layout_gravity="right" />
+            android:gravity="right"
+            android:textAlignment="gravity" />
     </LinearLayout>
 </LinearLayout>

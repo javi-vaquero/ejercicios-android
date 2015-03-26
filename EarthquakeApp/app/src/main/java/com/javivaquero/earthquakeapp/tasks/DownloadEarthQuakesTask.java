@@ -26,6 +26,7 @@ public class DownloadEarthQuakesTask extends AsyncTask<String,EarthQuake,Integer
 
     public interface AddEarthQuakeInterface{
         public void addEarthQuake(EarthQuake earthquake);
+        public void notifyTotal(int total);
     }
 
     private final String EARTHQUAKE = "EARTHQUAKE";
@@ -38,11 +39,12 @@ public class DownloadEarthQuakesTask extends AsyncTask<String,EarthQuake,Integer
 
     @Override
     protected Integer doInBackground(String... urls) {
+        int count = 0;
         if(urls.length>0) {
-            updateEarthQuakes(urls[0]);
+            count = updateEarthQuakes(urls[0]);
         }
 
-        return null;
+        return new Integer(count);
     }
 
     @Override
@@ -51,11 +53,16 @@ public class DownloadEarthQuakesTask extends AsyncTask<String,EarthQuake,Integer
         target.addEarthQuake(earthquakes[0]);
     }
 
+    @Override
+    protected void onPostExecute(Integer count) {
+        super.onPostExecute(count);
+        target.notifyTotal(count.intValue());
+    }
 
-
-    private void updateEarthQuakes(String earthQuakeFeed) {
+    private int updateEarthQuakes(String earthQuakeFeed) {
         JSONObject json;
         String earthquakeUrl = earthQuakeFeed;
+        int count = 0;
 
         try{
             URL url = new URL(earthquakeUrl);
@@ -77,6 +84,7 @@ public class DownloadEarthQuakesTask extends AsyncTask<String,EarthQuake,Integer
 
                 json = new JSONObject(responseStrBuilder.toString());
                 JSONArray earthquakes = json.getJSONArray("features");
+                count=earthquakes.length();
 
                 for (int i = earthquakes.length()-1; i >= 0; i--) {
                     processEarthQuakeTask(earthquakes.getJSONObject(i));
@@ -90,6 +98,8 @@ public class DownloadEarthQuakesTask extends AsyncTask<String,EarthQuake,Integer
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        return count;
 
     }
 

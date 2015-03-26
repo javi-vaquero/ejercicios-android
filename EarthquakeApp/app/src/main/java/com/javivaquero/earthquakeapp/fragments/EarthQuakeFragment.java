@@ -1,6 +1,7 @@
 package com.javivaquero.earthquakeapp.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.ListFragment;
 import android.util.Log;
@@ -9,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.javivaquero.earthquakeapp.DetailActivity;
 import com.javivaquero.earthquakeapp.R;
 import com.javivaquero.earthquakeapp.adapters.EarthQuakeArrayAdapter;
 import com.javivaquero.earthquakeapp.model.Coordinate;
@@ -39,6 +42,9 @@ import java.util.ArrayList;
  */
 public class EarthQuakeFragment extends ListFragment implements DownloadEarthQuakesTask.AddEarthQuakeInterface {
 
+    public static final String EQ_ID = "ID";
+    public static final String EQ_PLACE = "NAME";
+    public static final String EQ_MAGNITUDE = "MAGNITUDE";
     private final String EARTHQUAKE = "EARTHQUAKE";
 
     private ArrayList<EarthQuake> earthQuakeArrayList = new ArrayList<>();
@@ -70,5 +76,23 @@ public class EarthQuakeFragment extends ListFragment implements DownloadEarthQua
     public void addEarthQuake(EarthQuake earthquake) {
         earthQuakeArrayList.add(0,earthquake);
         aa.notifyDataSetChanged();
+    }
+
+    @Override
+    public void notifyTotal(int total) {
+        String msg = getString(R.string.num_earthquakes, total);
+        Toast t =  Toast.makeText(getActivity(), msg ,Toast.LENGTH_SHORT);
+        t.show();
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+
+        Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
+        detailIntent.putExtra(EQ_ID, earthQuakeArrayList.get(position).get_id());
+        detailIntent.putExtra(EQ_PLACE, earthQuakeArrayList.get(position).getPlace());
+        detailIntent.putExtra(EQ_MAGNITUDE, earthQuakeArrayList.get(position).getMagnitude());
+        startActivity(detailIntent);
     }
 }
