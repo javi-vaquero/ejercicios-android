@@ -5,9 +5,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.javivaquero.earthquakeapp.tasks.DownloadEarthQuakesTask;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements DownloadEarthQuakesTask.AddEarthQuakeInterface {
 
     private final int PREFS_ACTIVITY = 0;
 
@@ -15,6 +18,8 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        downloadEarthQuakes();
     }
 
 
@@ -35,15 +40,22 @@ public class MainActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent prefsIntent = new Intent(this, SettingsActivity.class);
-            startActivityForResult(prefsIntent, PREFS_ACTIVITY);
+            startActivity(prefsIntent);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void  downloadEarthQuakes(){
+        DownloadEarthQuakesTask task = new DownloadEarthQuakesTask(this, this);
+        task.execute(getString(R.string.earthquakes_url));
+    }
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void notifyTotal(int total) {
+        String msg = getString(R.string.num_earthquakes, total);
+        Toast t =  Toast.makeText(this, msg ,Toast.LENGTH_SHORT);
+        t.show();
     }
 }

@@ -1,9 +1,11 @@
 package com.javivaquero.earthquakeapp.tasks;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.javivaquero.earthquakeapp.R;
+import com.javivaquero.earthquakeapp.database.EarthQuakeDB;
 import com.javivaquero.earthquakeapp.model.Coordinate;
 import com.javivaquero.earthquakeapp.model.EarthQuake;
 
@@ -20,12 +22,13 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
- * Created by cursomovil on 25/03/15.
+ * Created by javi-vaquero on 25/03/15.
  */
 public class DownloadEarthQuakesTask extends AsyncTask<String,EarthQuake,Integer> {
 
+    private EarthQuakeDB earthQuakeDB;
+
     public interface AddEarthQuakeInterface{
-        public void addEarthQuake(EarthQuake earthquake);
         public void notifyTotal(int total);
     }
 
@@ -33,8 +36,9 @@ public class DownloadEarthQuakesTask extends AsyncTask<String,EarthQuake,Integer
 
     private AddEarthQuakeInterface target;
 
-    public DownloadEarthQuakesTask(AddEarthQuakeInterface target){
+    public DownloadEarthQuakesTask(Context context, AddEarthQuakeInterface target){
         this.target=target;
+        earthQuakeDB = new EarthQuakeDB(context);
     }
 
     @Override
@@ -50,7 +54,7 @@ public class DownloadEarthQuakesTask extends AsyncTask<String,EarthQuake,Integer
     @Override
     protected void onProgressUpdate(EarthQuake... earthquakes) {
         super.onProgressUpdate(earthquakes);
-        target.addEarthQuake(earthquakes[0]);
+
     }
 
     @Override

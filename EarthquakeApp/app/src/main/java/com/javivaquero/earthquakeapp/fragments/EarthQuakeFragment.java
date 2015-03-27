@@ -2,8 +2,10 @@ package com.javivaquero.earthquakeapp.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.ListFragment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,25 +42,35 @@ import java.util.ArrayList;
  * Activities containing this fragment MUST implement the {@ link OnFragmentInteractionListener}
  * interface.
  */
-public class EarthQuakeFragment extends ListFragment implements DownloadEarthQuakesTask.AddEarthQuakeInterface {
+public class EarthQuakeFragment extends ListFragment {
 
     public static final String EQ_ID = "ID";
     public static final String EQ_PLACE = "NAME";
     public static final String EQ_MAGNITUDE = "MAGNITUDE";
     private final String EARTHQUAKE = "EARTHQUAKE";
 
-    private ArrayList<EarthQuake> earthQuakeArrayList = new ArrayList<>();
+    private SharedPreferences prefs;
 
+    private ArrayList<EarthQuake> earthQuakeArrayList = new ArrayList<>();
     private EarthQuakeArrayAdapter aa;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DownloadEarthQuakesTask task = new DownloadEarthQuakesTask(this);
-        task.execute(getString(R.string.earthquakes_url));
+        //downloadEarthQuakes();
+        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
     }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        earthQuakeArrayList.clear();
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,20 +81,6 @@ public class EarthQuakeFragment extends ListFragment implements DownloadEarthQua
 
         return layout;
 
-    }
-
-
-    @Override
-    public void addEarthQuake(EarthQuake earthquake) {
-        earthQuakeArrayList.add(0,earthquake);
-        aa.notifyDataSetChanged();
-    }
-
-    @Override
-    public void notifyTotal(int total) {
-        String msg = getString(R.string.num_earthquakes, total);
-        Toast t =  Toast.makeText(getActivity(), msg ,Toast.LENGTH_SHORT);
-        t.show();
     }
 
     @Override
