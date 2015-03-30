@@ -61,6 +61,7 @@ public class DownloadEarthQuakesTask extends AsyncTask<String,EarthQuake,Integer
     protected void onPostExecute(Integer count) {
         super.onPostExecute(count);
         target.notifyTotal(count.intValue());
+
     }
 
     private int updateEarthQuakes(String earthQuakeFeed) {
@@ -127,7 +128,7 @@ public class DownloadEarthQuakesTask extends AsyncTask<String,EarthQuake,Integer
             earthQuake.setCoords(coords);
 
             Log.d(EARTHQUAKE, earthQuake.toString());
-            publishProgress(earthQuake);
+            earthQuakeDB.insertEarthQuake(earthQuake);
 
 
         } catch (JSONException e) {

@@ -16,7 +16,9 @@ import android.widget.Toast;
 
 import com.javivaquero.earthquakeapp.DetailActivity;
 import com.javivaquero.earthquakeapp.R;
+import com.javivaquero.earthquakeapp.SettingsActivity;
 import com.javivaquero.earthquakeapp.adapters.EarthQuakeArrayAdapter;
+import com.javivaquero.earthquakeapp.database.EarthQuakeDB;
 import com.javivaquero.earthquakeapp.model.Coordinate;
 import com.javivaquero.earthquakeapp.model.EarthQuake;
 import com.javivaquero.earthquakeapp.tasks.DownloadEarthQuakesTask;
@@ -47,11 +49,12 @@ public class EarthQuakeFragment extends ListFragment {
     public static final String EQ_ID = "ID";
     public static final String EQ_PLACE = "NAME";
     public static final String EQ_MAGNITUDE = "MAGNITUDE";
-    private final String EARTHQUAKE = "EARTHQUAKE";
+    //private final String EARTHQUAKE = "EARTHQUAKE";
 
     private SharedPreferences prefs;
+    private EarthQuakeDB earthquakeDB;
 
-    private ArrayList<EarthQuake> earthQuakeArrayList = new ArrayList<>();
+    private ArrayList<EarthQuake> earthQuakeArrayList;// = new ArrayList<>();
     private EarthQuakeArrayAdapter aa;
 
     @Override
@@ -60,29 +63,37 @@ public class EarthQuakeFragment extends ListFragment {
 
         //downloadEarthQuakes();
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        earthquakeDB = new EarthQuakeDB(getActivity());
 
     }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        earthQuakeArrayList.clear();
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout =  super.onCreateView(inflater, container, savedInstanceState);
-
-        aa= new EarthQuakeArrayAdapter(getActivity(), R.layout.earthquake_item, earthQuakeArrayList);
-        setListAdapter(aa);
+        double magnitude = new Double(prefs.getString(getString(R.string.PREF_MIN_MAGNITUDE), "0.0"));
+        earthQuakeArrayList = (ArrayList<EarthQuake>) earthquakeDB.getAllByMagnitude(magnitude);
 
         return layout;
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        aa= new EarthQuakeArrayAdapter(getActivity(), R.layout.earthquake_item, earthQuakeArrayList);
+        setListAdapter(aa);
+    }
+/*
+    public void refreshData(){
+        double magnitude = new Double(prefs.getString(getString(R.string.PREF_MIN_MAGNITUDE), "0.0"));
+        earthQuakeArrayList = (ArrayList<EarthQuake>) earthquakeDB.getAllByMagnitude(magnitude);
+
+        aa= new EarthQuakeArrayAdapter(getActivity(), R.layout.earthquake_item, earthQuakeArrayList);
+        setListAdapter(aa);
+
+    }
+*/
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);

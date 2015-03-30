@@ -1,5 +1,6 @@
 package com.javivaquero.earthquakeapp;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -55,7 +56,7 @@ public class MainActivity extends ActionBarActivity implements DownloadEarthQuak
     @Override
     public void notifyTotal(int total) {
         String msg = getString(R.string.num_earthquakes, total);
-        Toast t =  Toast.makeText(this, msg ,Toast.LENGTH_SHORT);
+        Toast t =  Toast.makeText(this, msg, Toast.LENGTH_SHORT);
         t.show();
     }
 }

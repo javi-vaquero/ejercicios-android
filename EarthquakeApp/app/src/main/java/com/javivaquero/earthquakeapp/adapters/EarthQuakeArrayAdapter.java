@@ -51,10 +51,7 @@ public class EarthQuakeArrayAdapter extends ArrayAdapter<EarthQuake>{
         TextView lblMagnitude = (TextView) layout.findViewById(R.id.magnitude);
         TextView lblPlace = (TextView) layout.findViewById(R.id.place);
         TextView lblDate = (TextView) layout.findViewById(R.id.date);
-/*
-        int color = color variable segun magnitud.
-        lblMagnitude.setBackgroundColor(color);
-*/
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
         lblMagnitude.setText(String.valueOf(item.getMagnitude()));
