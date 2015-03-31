@@ -92,6 +92,19 @@ public class EarthQuakeDB {
 
     }
 
+    public EarthQuake getById(String id){
+        EarthQuake eq = null;
+
+        String where = ID_KEY + "=?";
+        String whereArgs[] = {id};
+        List <EarthQuake> q = query(where, whereArgs);
+        if (q.size()>0){
+            eq =  q.get(0);
+        }
+        return eq;
+
+    }
+
     public List<EarthQuake> query(String where, String[] whereArgs){
 
         String order = TIME_KEY + " DESC";

@@ -37,4 +37,11 @@ public class Coordinate {
     public void setDepth(double depth) {
         this.depth = depth;
     }
+
+    @Override
+    public String toString() {
+        return  "lat=" + lat +
+                ", lng=" + lng +
+                ", depth=" + depth;
+    }
 }

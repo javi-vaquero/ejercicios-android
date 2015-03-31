@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.javivaquero.earthquakeapp.services.DownloadEarthQuakesService;
 import com.javivaquero.earthquakeapp.tasks.DownloadEarthQuakesTask;
 
 
@@ -49,8 +50,11 @@ public class MainActivity extends ActionBarActivity implements DownloadEarthQuak
     }
 
     private void  downloadEarthQuakes(){
-        DownloadEarthQuakesTask task = new DownloadEarthQuakesTask(this, this);
-        task.execute(getString(R.string.earthquakes_url));
+        //DownloadEarthQuakesTask task = new DownloadEarthQuakesTask(this, this);
+        //task.execute(getString(R.string.earthquakes_url));
+
+        Intent download = new Intent(this, DownloadEarthQuakesService.class);
+        startService(download);
     }
 
     @Override

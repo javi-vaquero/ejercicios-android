@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.javivaquero.earthquakeapp.R;
 
 
-public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
+public class SettingsFragment extends PreferenceFragment {
 
 
     @Override
@@ -27,24 +27,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         //Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.userpreferences);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        prefs.registerOnSharedPreferenceChangeListener(this);
+
     }
 
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equals(getString(R.string.PREF_AUTO_UPDATE))){
-            // Start/Stop auto updates
 
-        }
-        else if(key.equals(getString(R.string.PREF_UPDATE_INTERVAL))){
-            // Change auto refresh interval
-
-        }
-        else if(key.equals(getString(R.string.PREF_MIN_MAGNITUDE))){
-            // Update earthquake listview
-
-        }
-    }
 }

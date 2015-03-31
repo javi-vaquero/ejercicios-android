@@ -7,21 +7,12 @@
     tools:context="com.javivaquero.earthquakeapp.DetailActivity">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/eqID"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="id" />
-
-    <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/eqPlace"
-        android:layout_below="@+id/eqID"
         android:layout_centerHorizontal="true"
         android:textIsSelectable="false"
-        android:textSize="56dp"
+        android:textSize="30dp"
         android:textAlignment="gravity"
         android:gravity="center_vertical|center_horizontal"
         android:text="PLACE" />
@@ -30,17 +21,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/eqMagnitude"
-        android:textSize="56dp"
+        android:textSize="50dp"
         android:text="magnitude"
-        android:layout_below="@+id/eqCoordinates"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/eqPlace"
+        android:layout_centerHorizontal="true"
+        android:textColor="#CC0000" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Coordinates"
         android:id="@+id/eqCoordinates"
-        android:layout_below="@+id/eqPlace"
+        android:textSize="12dp"
+        android:layout_below="@+id/eqDate"
         android:layout_centerHorizontal="true" />
 
     <TextView
@@ -49,5 +42,25 @@
         android:text="date"
         android:id="@+id/eqDate"
         android:layout_below="@+id/eqMagnitude"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textSize="15dp" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="URL"
+        android:id="@+id/eqUrl"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:textAlignment="gravity"
+        android:gravity="center_vertical|center_horizontal" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/eqImage"
+        android:layout_above="@+id/eqUrl"
+        android:layout_alignEnd="@+id/eqUrl"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/eqCoordinates" />
 </RelativeLayout>

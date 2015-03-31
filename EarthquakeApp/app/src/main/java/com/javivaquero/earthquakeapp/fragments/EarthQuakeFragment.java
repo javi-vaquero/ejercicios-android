@@ -64,14 +64,17 @@ public class EarthQuakeFragment extends ListFragment {
         //downloadEarthQuakes();
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         earthquakeDB = new EarthQuakeDB(getActivity());
+        earthQuakeArrayList = new ArrayList<>();
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout =  super.onCreateView(inflater, container, savedInstanceState);
-        double magnitude = new Double(prefs.getString(getString(R.string.PREF_MIN_MAGNITUDE), "0.0"));
-        earthQuakeArrayList = (ArrayList<EarthQuake>) earthquakeDB.getAllByMagnitude(magnitude);
+
+        aa= new EarthQuakeArrayAdapter(getActivity(), R.layout.earthquake_item, earthQuakeArrayList);
+        setListAdapter(aa);
+
 
         return layout;
 
@@ -81,8 +84,11 @@ public class EarthQuakeFragment extends ListFragment {
     public void onResume() {
         super.onResume();
 
-        aa= new EarthQuakeArrayAdapter(getActivity(), R.layout.earthquake_item, earthQuakeArrayList);
-        setListAdapter(aa);
+        double magnitude = new Double(prefs.getString(getString(R.string.PREF_MIN_MAGNITUDE), "0.0"));
+        earthQuakeArrayList.clear();
+        earthQuakeArrayList.addAll(earthquakeDB.getAllByMagnitude(magnitude));
+        aa.notifyDataSetChanged();
+
     }
 /*
     public void refreshData(){
@@ -100,8 +106,6 @@ public class EarthQuakeFragment extends ListFragment {
 
         Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
         detailIntent.putExtra(EQ_ID, earthQuakeArrayList.get(position).get_id());
-        detailIntent.putExtra(EQ_PLACE, earthQuakeArrayList.get(position).getPlace());
-        detailIntent.putExtra(EQ_MAGNITUDE, earthQuakeArrayList.get(position).getMagnitude());
         startActivity(detailIntent);
     }
 }

@@ -1,6 +1,7 @@
 package com.javivaquero.earthquakeapp.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,10 @@ public class EarthQuakeArrayAdapter extends ArrayAdapter<EarthQuake>{
         lblMagnitude.setText(String.valueOf(item.getMagnitude()));
         lblPlace.setText(item.getPlace());
         lblDate.setText(sdf.format(item.getDate()));
+
+        int n = (int) item.getMagnitude() * 10;
+        int color = Color.rgb((255*n)/100, (255*(100-n))/100, 0);
+        lblMagnitude.setBackgroundColor(color);
 
 
         return layout;

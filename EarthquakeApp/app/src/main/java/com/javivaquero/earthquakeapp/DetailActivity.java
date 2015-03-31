@@ -1,36 +1,79 @@
 package com.javivaquero.earthquakeapp;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.javivaquero.earthquakeapp.database.EarthQuakeDB;
 import com.javivaquero.earthquakeapp.fragments.EarthQuakeFragment;
+import com.javivaquero.earthquakeapp.model.EarthQuake;
+import com.javivaquero.earthquakeapp.tasks.DownloadImageTask;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 
-public class DetailActivity extends ActionBarActivity {
+public class DetailActivity extends ActionBarActivity implements DownloadImageTask.SetImageInterface{
 
-    TextView lblID;
     TextView lblPlace;
     TextView lblMagnitude;
+    TextView lblCoordinates;
+    TextView lblDate;
+    TextView lblUrl;
+    ImageView imgMap;
+
+    EarthQuakeDB earthquakeDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        earthquakeDB = new EarthQuakeDB(this);
+
         Intent detailIntent = getIntent();
 
-        lblID = (TextView) findViewById(R.id.eqID);
         lblPlace = (TextView) findViewById(R.id.eqPlace);
         lblMagnitude = (TextView) findViewById(R.id.eqMagnitude);
+        lblCoordinates = (TextView) findViewById(R.id.eqCoordinates);
+        lblDate = (TextView) findViewById(R.id.eqDate);
+        lblUrl = (TextView) findViewById(R.id.eqUrl);
+        imgMap = (ImageView) findViewById(R.id.eqImage);
 
-        lblID.setText(detailIntent.getStringExtra(EarthQuakeFragment.EQ_ID));
-        lblPlace.setText(detailIntent.getStringExtra(EarthQuakeFragment.EQ_PLACE));
-        double mag = detailIntent.getDoubleExtra(EarthQuakeFragment.EQ_MAGNITUDE,-100);
-        lblMagnitude.setText(String.valueOf(mag));
+
+
+        String id = detailIntent.getStringExtra(EarthQuakeFragment.EQ_ID);
+        EarthQuake earthquake = earthquakeDB.getById(id);
+
+        String url = "http://maps.googleapis.com/maps/api/staticmap?center=" +
+                earthquake.getCoords().getLongitude() + "," + earthquake.getCoords().getLatitude() +
+                "&zoom=9&size=500x500&markers=color:red%7Ccolor:red%7Clabel:X%7C"+
+                earthquake.getCoords().getLongitude() + "," + earthquake.getCoords().getLatitude() +
+                "&sensor=false";
+        new DownloadImageTask(this).execute(url);
+
+        lblPlace.setText(earthquake.getPlace());
+        lblMagnitude.setText(String.valueOf(earthquake.getMagnitude()));
+        lblDate.setText(String.valueOf(earthquake.getDate()));
+        lblCoordinates.setText(earthquake.getCoords().toString());
+        lblUrl.setText(earthquake.getUrl());
+        lblUrl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse(lblUrl.getText().toString());
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -56,5 +99,10 @@ public class DetailActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void setImage(Bitmap bitmap) {
+        imgMap.setImageBitmap(bitmap);
     }
 }

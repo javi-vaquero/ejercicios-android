@@ -21,14 +21,21 @@
         <activity
             android:name=".DetailActivity"
             android:label="@string/title_activity_detail"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.javivaquero.earthquakeapp.MainActivity" />
         </activity>
-        <activity android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings">
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" >
         </activity>
+
+        <service
+            android:name=".services.DownloadEarthQuakesService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>
