@@ -2,7 +2,6 @@ package com.javivaquero.earthquakeapp;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -17,12 +16,11 @@ import com.javivaquero.earthquakeapp.fragments.EarthQuakeFragment;
 import com.javivaquero.earthquakeapp.model.EarthQuake;
 import com.javivaquero.earthquakeapp.tasks.DownloadImageTask;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 
 public class DetailActivity extends ActionBarActivity implements DownloadImageTask.SetImageInterface{
+
+    public static final String URL = "URL";
 
     TextView lblPlace;
     TextView lblMagnitude;
@@ -50,7 +48,6 @@ public class DetailActivity extends ActionBarActivity implements DownloadImageTa
         imgMap = (ImageView) findViewById(R.id.eqImage);
 
 
-
         String id = detailIntent.getStringExtra(EarthQuakeFragment.EQ_ID);
         EarthQuake earthquake = earthquakeDB.getById(id);
 
@@ -69,9 +66,12 @@ public class DetailActivity extends ActionBarActivity implements DownloadImageTa
         lblUrl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse(lblUrl.getText().toString());
+                /*Uri uri = Uri.parse(lblUrl.getText().toString());
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
+                startActivity(intent);*/
+                Intent web = new Intent(DetailActivity.this, WebBrowserActivity.class);
+                web.putExtra(URL,lblUrl.getText().toString());
+                startActivity(web);
             }
         });
     }

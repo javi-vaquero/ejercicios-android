@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.javivaquero.earthquakeapp.fragments.SettingsFragment;
+import com.javivaquero.earthquakeapp.managers.EarthQuakeAlarmManager;
 import com.javivaquero.earthquakeapp.services.DownloadEarthQuakesService;
 
 /**
@@ -34,27 +35,25 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
-        AlarmManager alarmManager = (AlarmManager)getSystemService(this.ALARM_SERVICE);
-        int	alarmType = AlarmManager.RTC;
-        long timeOrLengthofWait = Integer.valueOf(sharedPreferences.getString(getString(R.string.PREF_UPDATE_INTERVAL), "1")) * 60 *1000;
-        Intent intentToFire = new Intent(this, DownloadEarthQuakesService.class);
-        PendingIntent alarmIntent = PendingIntent.getService(this, 0, intentToFire, 0);
-
         if(key.equals(getString(R.string.PREF_AUTO_UPDATE))){
             // Start/Stop auto updates
-            if(sharedPreferences.getBoolean(getString(R.string.PREF_AUTO_UPDATE), false)){
-                alarmManager.setRepeating(alarmType, 0, timeOrLengthofWait, alarmIntent);
+            if(sharedPreferences.getBoolean(key, true)){
+                long interval = Long.parseLong(sharedPreferences.getString(getString(R.string.PREF_UPDATE_INTERVAL), "1"));
+                EarthQuakeAlarmManager.setAlarm(this, interval * 60 *1000);
+
             }
             else{
-                alarmManager.cancel(alarmIntent);
+                EarthQuakeAlarmManager.cancelAlarm(this);
             }
 
         }
         else if(key.equals(getString(R.string.PREF_UPDATE_INTERVAL))){
             // Change auto refresh interval
-            alarmManager.setRepeating(alarmType, 0, timeOrLengthofWait, alarmIntent);
+            long interval = Long.parseLong(sharedPreferences.getString(getString(R.string.PREF_UPDATE_INTERVAL), "1"));
+            EarthQuakeAlarmManager.updateAlarm(this, interval * 60 *1000);
 
         }
     }
+
+
 }
