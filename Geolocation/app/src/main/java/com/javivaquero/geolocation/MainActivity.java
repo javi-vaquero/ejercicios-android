@@ -64,7 +64,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener.
     @Override
     public void addLocation(Location location) {
         lblLatitude.setText(String.valueOf(location.getLatitude()));
-        lblLongitude.setText(String.valueOf(location.getLatitude()));
+        lblLongitude.setText(String.valueOf(location.getLongitude()));
         lblAltitude.setText(String.valueOf(location.getAltitude()));
         lblSpeed.setText(String.valueOf(location.getSpeed()));
     }
