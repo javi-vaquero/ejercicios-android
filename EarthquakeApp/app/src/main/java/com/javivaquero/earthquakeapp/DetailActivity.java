@@ -52,9 +52,9 @@ public class DetailActivity extends ActionBarActivity implements DownloadImageTa
         EarthQuake earthquake = earthquakeDB.getById(id);
 
         String url = "http://maps.googleapis.com/maps/api/staticmap?center=" +
-                earthquake.getCoords().getLongitude() + "," + earthquake.getCoords().getLatitude() +
+                earthquake.getCoords().getLatitude() + "," + earthquake.getCoords().getLongitude() +
                 "&zoom=9&size=500x500&markers=color:red%7Ccolor:red%7Clabel:X%7C"+
-                earthquake.getCoords().getLongitude() + "," + earthquake.getCoords().getLatitude() +
+                earthquake.getCoords().getLatitude() + "," + earthquake.getCoords().getLongitude() +
                 "&sensor=false";
         new DownloadImageTask(this).execute(url);
 

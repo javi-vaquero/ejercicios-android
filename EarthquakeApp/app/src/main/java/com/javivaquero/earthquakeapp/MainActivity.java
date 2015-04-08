@@ -66,6 +66,11 @@ public class MainActivity extends ActionBarActivity implements DownloadEarthQuak
             startActivity(prefsIntent);
             return true;
         }
+        else if (id == R.id.action_maps){
+            Intent mapsIntent = new Intent(this, MapsActivity.class);
+            startActivity(mapsIntent);
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }

@@ -97,7 +97,8 @@ public class DownloadEarthQuakesService extends Service {
         try {
             //Get coordinates
             JSONArray jsonCoords = jsonObject.getJSONObject("geometry").getJSONArray("coordinates");
-            Coordinate coords = new Coordinate(jsonCoords.getDouble(0), jsonCoords.getDouble(1),jsonCoords.getDouble(2));
+            //Latitude and Longitude vienen primero Longitud y luego Latitud
+            Coordinate coords = new Coordinate(jsonCoords.getDouble(1), jsonCoords.getDouble(0),jsonCoords.getDouble(2));
 
             //Get properties
             JSONObject properties = jsonObject.getJSONObject("properties");
