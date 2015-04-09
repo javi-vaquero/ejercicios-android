@@ -26,4 +26,6 @@
     <string name="title_activity_web_browser">Web Details</string>
     <string name="title_activity_maps">Map</string>
     <string name="action_maps">View in Maps</string>
+    <string name="magnitude">Magnitude: %f</string>
+    <string name="depth">Depth: %f km</string>
 </resources>

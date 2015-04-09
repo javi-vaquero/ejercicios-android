@@ -36,6 +36,7 @@ public class DownloadEarthQuakesService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        Log.d("UPDATES","updating");
 
         Thread t = new Thread(new Runnable() {
             @Override

@@ -1,5 +1,7 @@
 package com.javivaquero.earthquakeapp;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -24,6 +26,7 @@ public class MapsActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         db = new EarthQuakeDB(this);
+        earthQuakes = new ArrayList<>();
         setUpMapIfNeeded();
     }
 
@@ -54,10 +57,12 @@ public class MapsActivity extends FragmentActivity {
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
                     .getMap();
-            earthQuakes = new ArrayList<>();
-            earthQuakes.addAll(db.getAll());
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            double magnitude = new Double(prefs.getString(getString(R.string.PREF_MIN_MAGNITUDE), "0.0"));
+            earthQuakes.clear();
+            earthQuakes.addAll(db.getAllByMagnitude(magnitude));
             // Check if we were successful in obtaining the map.
-            if (mMap != null) {
+            if (mMap != null){
                 setUpMap();
             }
         }
@@ -74,7 +79,8 @@ public class MapsActivity extends FragmentActivity {
             EarthQuake eq = earthQuakes.get(i);
             mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(eq.getCoords().getLatitude(), eq.getCoords().getLongitude()))
-                    .title(String.valueOf(eq.getMagnitude())));
+                    .title(eq.getPlace())
+                    .snippet(getString(R.string.magnitude ,eq.getMagnitude())));
         }
         //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
     }
