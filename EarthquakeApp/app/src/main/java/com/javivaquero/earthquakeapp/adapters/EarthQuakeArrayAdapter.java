@@ -55,7 +55,7 @@ public class EarthQuakeArrayAdapter extends ArrayAdapter<EarthQuake>{
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-        lblMagnitude.setText(String.valueOf(item.getMagnitude()));
+        lblMagnitude.setText(String.format("%.2f",item.getMagnitude()));
         lblPlace.setText(item.getPlace());
         lblDate.setText(sdf.format(item.getDate()));
 

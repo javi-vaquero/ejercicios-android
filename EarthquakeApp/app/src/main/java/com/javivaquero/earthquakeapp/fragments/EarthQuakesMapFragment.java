@@ -9,7 +9,6 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -21,8 +20,9 @@ import java.util.List;
 /**
  * Created by javi-vaquero on 9/04/15.
  */
-public class EarthQuakesMapFragment extends MapFragment implements GoogleMap.OnMapLoadedCallback {
+public class EarthQuakesMapFragment extends MapFragment implements GoogleMap.OnMapLoadedCallback, GoogleMap.CancelableCallback{
 
+    private final int maxZoomAfterAnimation = 9;
     GoogleMap map;
     List<EarthQuake> earthquakes;
 
@@ -51,7 +51,7 @@ public class EarthQuakesMapFragment extends MapFragment implements GoogleMap.OnM
             MarkerOptions marker = new MarkerOptions()
                     .position(point)
                     .title(earthquakes.get(i).getPlace())
-                    .snippet(getString(R.string.magnitude, earthquakes.get(i).getMagnitude()));
+                    .snippet(getString(R.string.magnitude, String.format("%.2f",earthquakes.get(i).getMagnitude())));
 
             map.addMarker(marker);
             builder.include(marker.getPosition());
@@ -60,23 +60,20 @@ public class EarthQuakesMapFragment extends MapFragment implements GoogleMap.OnM
 
         LatLngBounds bounds = builder.build();
 
-        CameraUpdate cu;
-         /*
-            LatLng ne = bounds.northeast;
-            LatLng sw = bounds.southwest;
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 0);
+        map.animateCamera(cu,this);
 
-            restar para saber que latitud y que longitud se abarca, y si es menor que unos minimos abrandar el bounds
-         */
 
-        //Sustituir el anterior por este que solo comprueba que si tenemos un solo punto para hacer zoom
-        if(earthquakes.size()==1){
-            cu = CameraUpdateFactory.newLatLngZoom(new LatLng(earthquakes.get(0).getCoords().getLatitude(),
-                    earthquakes.get(0).getCoords().getLongitude()), 9);
+    }
+
+    @Override
+    public void onFinish() {
+        if (map.getCameraPosition().zoom > maxZoomAfterAnimation) {
+            map.moveCamera(CameraUpdateFactory.zoomTo(maxZoomAfterAnimation));
         }
-        else {
-            cu = CameraUpdateFactory.newLatLngBounds(bounds, 0);
-        }
-        map.animateCamera(cu);
+    }
+    @Override
+    public void onCancel() {
 
     }
 }

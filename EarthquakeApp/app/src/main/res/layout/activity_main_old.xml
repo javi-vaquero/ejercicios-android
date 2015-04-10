@@ -3,10 +3,13 @@
     android:layout_height="wrap_content"
     tools:context=".MainActivity">
 
-    <FrameLayout
+    <fragment
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
+        android:name="com.javivaquero.earthquakeapp.fragments.EarthQuakeListFragment"
+        android:id="@+id/fragment"
         android:layout_alignParentStart="true"
-        android:id="@+id/fragmentContainer"></FrameLayout>
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true" />
 </RelativeLayout>

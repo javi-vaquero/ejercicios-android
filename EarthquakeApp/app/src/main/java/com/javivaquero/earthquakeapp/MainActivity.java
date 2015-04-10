@@ -1,36 +1,57 @@
 package com.javivaquero.earthquakeapp;
 
+import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.FragmentManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
+
 import android.os.Bundle;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.javivaquero.earthquakeapp.fragments.EarthQuakeListFragment;
+import com.javivaquero.earthquakeapp.fragments.EarthQuakesMapFragment;
+import com.javivaquero.earthquakeapp.listeners.TabListener;
 import com.javivaquero.earthquakeapp.managers.EarthQuakeAlarmManager;
-import com.javivaquero.earthquakeapp.services.DownloadEarthQuakesService;
 import com.javivaquero.earthquakeapp.tasks.DownloadEarthQuakesTask;
 
 
-public class MainActivity extends ActionBarActivity implements DownloadEarthQuakesTask.AddEarthQuakeInterface {
+public class MainActivity extends Activity implements DownloadEarthQuakesTask.AddEarthQuakeInterface {
 
     private final int PREFS_ACTIVITY = 0;
     private final String EARTHQUAKE_PREFS = "EARTHQUAKE_PREFS";
+
+    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //downloadEarthQuakes();
-
+        addTabs();
         checkToSetAlarm();
+    }
+
+    private void addTabs() {
+        actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        ActionBar.Tab tabOne = actionBar.newTab();
+
+        tabOne.setText(R.string.listTab)
+                .setTabListener(
+                        new TabListener<EarthQuakeListFragment>(this, R.id.fragmentContainer, EarthQuakeListFragment.class));
+        actionBar.addTab(tabOne);
+
+        ActionBar.Tab tabTwo = actionBar.newTab();
+
+        tabTwo.setText(R.string.mapTab)
+                .setTabListener(
+                        new TabListener<>(this, R.id.fragmentContainer, EarthQuakesMapFragment.class));
+
+        actionBar.addTab(tabTwo);
+
     }
 
     private void checkToSetAlarm() {
@@ -64,11 +85,6 @@ public class MainActivity extends ActionBarActivity implements DownloadEarthQuak
         if (id == R.id.action_settings) {
             Intent prefsIntent = new Intent(this, SettingsActivity.class);
             startActivity(prefsIntent);
-            return true;
-        }
-        else if (id == R.id.action_maps){
-            Intent mapsIntent = new Intent(this, MapsActivity.class);
-            startActivity(mapsIntent);
             return true;
         }
 

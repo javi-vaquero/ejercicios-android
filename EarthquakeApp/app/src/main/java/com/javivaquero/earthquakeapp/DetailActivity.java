@@ -1,5 +1,6 @@
 package com.javivaquero.earthquakeapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -10,7 +11,7 @@ import android.widget.TextView;
 
 
 import com.javivaquero.earthquakeapp.database.EarthQuakeDB;
-import com.javivaquero.earthquakeapp.fragments.EarthQuakeFragment;
+import com.javivaquero.earthquakeapp.fragments.EarthQuakeListFragment;
 import com.javivaquero.earthquakeapp.fragments.EarthQuakesMapFragment;
 import com.javivaquero.earthquakeapp.model.EarthQuake;
 
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DetailActivity extends ActionBarActivity{
+public class DetailActivity extends Activity {
 
     public static final String URL = "URL";
 
@@ -38,10 +39,11 @@ public class DetailActivity extends ActionBarActivity{
         setContentView(R.layout.activity_detail);
 
         earthquakeDB = new EarthQuakeDB(this);
+
         mapFragment = ((EarthQuakesMapFragment) getFragmentManager().findFragmentById(R.id.mapFragment));
 
         Intent detailIntent = getIntent();
-        String id = detailIntent.getStringExtra(EarthQuakeFragment.EQ_ID);
+        String id = detailIntent.getStringExtra(EarthQuakeListFragment.EQ_ID);
         EarthQuake earthquake = earthquakeDB.getById(id);
 
 
@@ -54,9 +56,9 @@ public class DetailActivity extends ActionBarActivity{
 
 
         lblPlace.setText(earthquake.getPlace());
-        lblMagnitude.setText(String.valueOf(earthquake.getMagnitude()));
+        lblMagnitude.setText(String.format("%.2f", earthquake.getMagnitude()));
         lblDate.setText(String.valueOf(earthquake.getDate()));
-        lblCoordinates.setText(getString(R.string.depth, earthquake.getCoords().getDepth()));
+        lblCoordinates.setText(getString(R.string.depth, String.format("%.2f", earthquake.getCoords().getDepth())));
         lblUrl.setText(earthquake.getUrl());
         lblUrl.setOnClickListener(new View.OnClickListener() {
             @Override
