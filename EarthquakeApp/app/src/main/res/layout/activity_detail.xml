@@ -59,7 +59,7 @@
     <fragment
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:name="com.javivaquero.earthquakeapp.fragments.EarthQuakesMapFragment"
+        android:name="com.javivaquero.earthquakeapp.fragments.EarthQuakesMapDetailFragment"
         android:id="@+id/mapFragment"
         android:layout_below="@+id/eqCoordinates"
         android:layout_alignParentStart="true"

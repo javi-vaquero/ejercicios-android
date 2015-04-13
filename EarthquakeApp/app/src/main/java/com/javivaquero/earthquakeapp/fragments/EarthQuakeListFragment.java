@@ -73,16 +73,7 @@ public class EarthQuakeListFragment extends ListFragment {
         aa.notifyDataSetChanged();
 
     }
-/*
-    public void refreshData(){
-        double magnitude = new Double(prefs.getString(getString(R.string.PREF_MIN_MAGNITUDE), "0.0"));
-        earthQuakeArrayList = (ArrayList<EarthQuake>) earthquakeDB.getAllByMagnitude(magnitude);
 
-        aa= new EarthQuakeArrayAdapter(getActivity(), R.layout.earthquake_item, earthQuakeArrayList);
-        setListAdapter(aa);
-
-    }
-*/
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);

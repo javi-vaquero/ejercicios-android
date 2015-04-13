@@ -1,6 +1,7 @@
 package com.javivaquero.earthquakeapp;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -12,11 +13,9 @@ import android.widget.TextView;
 
 import com.javivaquero.earthquakeapp.database.EarthQuakeDB;
 import com.javivaquero.earthquakeapp.fragments.EarthQuakeListFragment;
-import com.javivaquero.earthquakeapp.fragments.EarthQuakesMapFragment;
+import com.javivaquero.earthquakeapp.fragments.EarthQuakesMapDetailFragment;
 import com.javivaquero.earthquakeapp.model.EarthQuake;
 
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class DetailActivity extends Activity {
@@ -28,9 +27,8 @@ public class DetailActivity extends Activity {
     TextView lblCoordinates;
     TextView lblDate;
     TextView lblUrl;
-    //ImageView imgMap;
 
-    private EarthQuakesMapFragment mapFragment;
+    private EarthQuakesMapDetailFragment mapFragment;
     EarthQuakeDB earthquakeDB;
 
     @Override
@@ -40,11 +38,10 @@ public class DetailActivity extends Activity {
 
         earthquakeDB = new EarthQuakeDB(this);
 
-        mapFragment = ((EarthQuakesMapFragment) getFragmentManager().findFragmentById(R.id.mapFragment));
-
         Intent detailIntent = getIntent();
         String id = detailIntent.getStringExtra(EarthQuakeListFragment.EQ_ID);
         EarthQuake earthquake = earthquakeDB.getById(id);
+        mapFragment = ((EarthQuakesMapDetailFragment) getFragmentManager().findFragmentById(R.id.mapFragment));
 
 
 
@@ -69,15 +66,15 @@ public class DetailActivity extends Activity {
             }
 
         });
-        showMap(earthquake);
+        //showMap(earthquake);
     }
-
+/*
     private void showMap(EarthQuake earthquake) {
         List<EarthQuake> earthquakes = new ArrayList<>();
         earthquakes.add(earthquake);
         mapFragment.setEarthQuakes(earthquakes);
     }
-
+*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

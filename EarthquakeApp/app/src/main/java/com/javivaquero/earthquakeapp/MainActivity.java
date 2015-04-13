@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.javivaquero.earthquakeapp.fragments.EarthQuakeListFragment;
-import com.javivaquero.earthquakeapp.fragments.EarthQuakesMapFragment;
+import com.javivaquero.earthquakeapp.fragments.EarthQuakesMapListFragment;
 import com.javivaquero.earthquakeapp.listeners.TabListener;
 import com.javivaquero.earthquakeapp.managers.EarthQuakeAlarmManager;
 import com.javivaquero.earthquakeapp.tasks.DownloadEarthQuakesTask;
@@ -20,7 +20,8 @@ import com.javivaquero.earthquakeapp.tasks.DownloadEarthQuakesTask;
 
 public class MainActivity extends Activity implements DownloadEarthQuakesTask.AddEarthQuakeInterface {
 
-    private final int PREFS_ACTIVITY = 0;
+    private static final String SELECTED_TAB = "SELECTED_TAB";
+   // private final int PREFS_ACTIVITY = 0;
     private final String EARTHQUAKE_PREFS = "EARTHQUAKE_PREFS";
 
     private ActionBar actionBar;
@@ -32,6 +33,10 @@ public class MainActivity extends Activity implements DownloadEarthQuakesTask.Ad
 
         addTabs();
         checkToSetAlarm();
+
+        if(savedInstanceState!=null){
+            actionBar.setSelectedNavigationItem(savedInstanceState.getInt(SELECTED_TAB));
+        }
     }
 
     private void addTabs() {
@@ -41,14 +46,14 @@ public class MainActivity extends Activity implements DownloadEarthQuakesTask.Ad
 
         tabOne.setText(R.string.listTab)
                 .setTabListener(
-                        new TabListener<EarthQuakeListFragment>(this, R.id.fragmentContainer, EarthQuakeListFragment.class));
+                        new TabListener<>(this, R.id.fragmentContainer, EarthQuakeListFragment.class));
         actionBar.addTab(tabOne);
 
         ActionBar.Tab tabTwo = actionBar.newTab();
 
         tabTwo.setText(R.string.mapTab)
                 .setTabListener(
-                        new TabListener<>(this, R.id.fragmentContainer, EarthQuakesMapFragment.class));
+                        new TabListener<>(this, R.id.fragmentContainer, EarthQuakesMapListFragment.class));
 
         actionBar.addTab(tabTwo);
 
@@ -90,17 +95,20 @@ public class MainActivity extends Activity implements DownloadEarthQuakesTask.Ad
 
         return super.onOptionsItemSelected(item);
     }
-/*
-    private void  downloadEarthQuakes(){
-        //DownloadEarthQuakesTask task = new DownloadEarthQuakesTask(this, this);
-        //task.execute(getString(R.string.earthquakes_url));
 
-       Intent download = new Intent(this, DownloadEarthQuakesService.class);
-       startService(download);
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
-
+        outState.putInt(SELECTED_TAB, actionBar.getSelectedNavigationIndex());
     }
-*/
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        actionBar.setSelectedNavigationItem(savedInstanceState.getInt(SELECTED_TAB));
+    }
+
     @Override
     public void notifyTotal(int total) {
         String msg = getString(R.string.num_earthquakes, total);
