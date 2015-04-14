@@ -1,10 +1,15 @@
 package com.javivaquero.earthquakeapp.services;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.media.RingtoneManager;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.javivaquero.earthquakeapp.MainActivity;
 import com.javivaquero.earthquakeapp.R;
 import com.javivaquero.earthquakeapp.database.EarthQuakeDB;
 import com.javivaquero.earthquakeapp.model.Coordinate;
@@ -80,6 +85,8 @@ public class DownloadEarthQuakesService extends Service {
                     processEarthQuakeTask(earthquakes.getJSONObject(i));
                 }
 
+                sendNotification(count);
+
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -90,6 +97,31 @@ public class DownloadEarthQuakesService extends Service {
         }
 
         return count;
+
+    }
+
+    private void sendNotification(int count) {
+        Intent intentToFire = new Intent(this, MainActivity.class);
+        PendingIntent activityIntent = PendingIntent.getActivity(this, 0, intentToFire, 0);
+
+        Notification.Builder builder = new Notification.Builder(DownloadEarthQuakesService.this);
+        builder.setSmallIcon(R.drawable.ic_launcher)
+                    .setTicker(getString(R.string.app_name))
+                    .setContentText(getString(R.string.count_earthquakes, count))
+                    .setWhen(System.currentTimeMillis())
+                    .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                    .setVibrate(new	long[]{ 1000, 1000, 1000, 1000, 1000})
+                    .setContentIntent(activityIntent)
+                    .setAutoCancel(true);
+
+        Notification notification = builder.build();
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        int	NOTIFICATION_REF = 1;
+
+        notificationManager.notify(NOTIFICATION_REF, notification);
 
     }
 

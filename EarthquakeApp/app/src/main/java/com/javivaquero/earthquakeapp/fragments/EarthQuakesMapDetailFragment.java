@@ -24,14 +24,15 @@ public class EarthQuakesMapDetailFragment extends AbstractMapFragment {
 
     @Override
     protected void showMap() {
+
         MarkerOptions marker = createMarker(earthquake);
-        getMap().addMarker(marker);
+        map.addMarker(marker);
 
         CameraPosition camPos = new CameraPosition.Builder().target(marker.getPosition())
                 .zoom(9)
                 .build();
         CameraUpdate camUpd	= CameraUpdateFactory.newCameraPosition(camPos);
-        getMap().animateCamera(camUpd);
+        map.animateCamera(camUpd);
     }
 
 

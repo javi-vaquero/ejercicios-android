@@ -33,7 +33,7 @@
             android:key="@string/PREF_MIN_MAGNITUDE"
             android:title="@string/min_magnitude_filter"
             android:summary="@string/min_magnitude_filter_summary"
-            android:entries="@array/magnitude"
+            android:entries="@array/magnitude_str"
             android:entryValues="@array/magnitude">
 
         </ListPreference>

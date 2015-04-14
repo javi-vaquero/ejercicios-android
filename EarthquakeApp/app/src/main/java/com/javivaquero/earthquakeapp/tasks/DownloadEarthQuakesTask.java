@@ -1,9 +1,13 @@
 package com.javivaquero.earthquakeapp.tasks;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.javivaquero.earthquakeapp.MainActivity;
 import com.javivaquero.earthquakeapp.R;
 import com.javivaquero.earthquakeapp.database.EarthQuakeDB;
 import com.javivaquero.earthquakeapp.model.Coordinate;
@@ -94,6 +98,7 @@ public class DownloadEarthQuakesTask extends AsyncTask<String,EarthQuake,Integer
                 for (int i = earthquakes.length()-1; i >= 0; i--) {
                     processEarthQuakeTask(earthquakes.getJSONObject(i));
                 }
+
 
             }
         } catch (MalformedURLException e) {

@@ -28,6 +28,7 @@ public abstract class AbstractMapFragment extends MapFragment implements GoogleM
 
 
     protected EarthQuakeDB earthquakeDB;
+    protected GoogleMap map;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,10 +40,21 @@ public abstract class AbstractMapFragment extends MapFragment implements GoogleM
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout =  super.onCreateView(inflater, container, savedInstanceState);
-        getMap().setOnMapLoadedCallback(this);
         return layout;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setUpMapIfNeeded();
+        map.setOnMapLoadedCallback(this);
+    }
+
+    private void setUpMapIfNeeded(){
+        if (map == null){
+            map = getMap();
+        }
+    }
 
 
 
@@ -66,8 +78,8 @@ public abstract class AbstractMapFragment extends MapFragment implements GoogleM
 
     @Override
     public void onFinish() {
-        if (getMap().getCameraPosition().zoom > maxZoomAfterAnimation) {
-            getMap().moveCamera(CameraUpdateFactory.zoomTo(maxZoomAfterAnimation));
+        if (map.getCameraPosition().zoom > maxZoomAfterAnimation) {
+            map.moveCamera(CameraUpdateFactory.zoomTo(maxZoomAfterAnimation));
         }
     }
     @Override

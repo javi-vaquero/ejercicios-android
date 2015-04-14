@@ -30,4 +30,6 @@
     <string name="depth">Depth: %s km</string>
     <string name="listTab">List</string>
     <string name="mapTab">Map</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="count_earthquakes">Update: %d earthquakes</string>
 </resources>

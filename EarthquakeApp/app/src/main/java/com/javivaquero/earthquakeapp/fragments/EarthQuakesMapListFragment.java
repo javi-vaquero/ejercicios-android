@@ -1,8 +1,12 @@
 package com.javivaquero.earthquakeapp.fragments;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -12,6 +16,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.javivaquero.earthquakeapp.R;
 import com.javivaquero.earthquakeapp.fragments.abstracts.AbstractMapFragment;
 import com.javivaquero.earthquakeapp.model.EarthQuake;
+import com.javivaquero.earthquakeapp.services.DownloadEarthQuakesService;
 
 import java.util.List;
 
@@ -26,7 +31,10 @@ public class EarthQuakesMapListFragment extends AbstractMapFragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
     }
 
     @Override
@@ -38,13 +46,15 @@ public class EarthQuakesMapListFragment extends AbstractMapFragment{
     @Override
     protected void showMap() {
 
+        map.clear();
+
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-        getMap().setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 
         for (EarthQuake earthquake: earthquakes) {
             MarkerOptions marker = createMarker(earthquake);
-            getMap().addMarker(marker);
+            map.addMarker(marker);
             builder.include(marker.getPosition());
 
         }
@@ -52,7 +62,26 @@ public class EarthQuakesMapListFragment extends AbstractMapFragment{
         LatLngBounds bounds = builder.build();
 
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 45);
-        getMap().animateCamera(cu);
+        map.animateCamera(cu);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.menu_refresh,menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id==R.id.action_refresh){
+            Intent download = new Intent(getActivity(), DownloadEarthQuakesService.class);
+            getActivity().startService(download);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

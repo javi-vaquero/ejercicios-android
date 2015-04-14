@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.javivaquero.earthquakeapp.fragments.EarthQuakeListFragment;
@@ -21,7 +22,6 @@ import com.javivaquero.earthquakeapp.tasks.DownloadEarthQuakesTask;
 public class MainActivity extends Activity implements DownloadEarthQuakesTask.AddEarthQuakeInterface {
 
     private static final String SELECTED_TAB = "SELECTED_TAB";
-   // private final int PREFS_ACTIVITY = 0;
     private final String EARTHQUAKE_PREFS = "EARTHQUAKE_PREFS";
 
     private ActionBar actionBar;
@@ -42,20 +42,24 @@ public class MainActivity extends Activity implements DownloadEarthQuakesTask.Ad
     private void addTabs() {
         actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        ActionBar.Tab tabOne = actionBar.newTab();
+        ActionBar.Tab listTab = actionBar.newTab();
 
-        tabOne.setText(R.string.listTab)
+        listTab
+                //.setText(R.string.listTab)
+                .setIcon(R.drawable.ic_action_view_as_list)
                 .setTabListener(
                         new TabListener<>(this, R.id.fragmentContainer, EarthQuakeListFragment.class));
-        actionBar.addTab(tabOne);
+        actionBar.addTab(listTab);
 
-        ActionBar.Tab tabTwo = actionBar.newTab();
+        ActionBar.Tab mapTab = actionBar.newTab();
 
-        tabTwo.setText(R.string.mapTab)
+        mapTab
+                //.setText(R.string.mapTab)
+                .setIcon(R.drawable.ic_action_map)
                 .setTabListener(
                         new TabListener<>(this, R.id.fragmentContainer, EarthQuakesMapListFragment.class));
 
-        actionBar.addTab(tabTwo);
+        actionBar.addTab(mapTab);
 
     }
 
@@ -98,9 +102,8 @@ public class MainActivity extends Activity implements DownloadEarthQuakesTask.Ad
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
         outState.putInt(SELECTED_TAB, actionBar.getSelectedNavigationIndex());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
