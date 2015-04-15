@@ -1,0 +1,86 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.javivaquero.earthquakeapp.DetailActivity">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/eqPlace"
+        android:layout_centerHorizontal="true"
+        android:textIsSelectable="false"
+        android:textSize="30dp"
+        android:textAlignment="gravity"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="PLACE" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/eqMagnitude"
+        android:textSize="50dp"
+        android:text="magnitude"
+        android:textColor="#CC0000"
+        android:layout_alignTop="@+id/mapFragment"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/space"
+        android:gravity="center_vertical|center_horizontal"
+        android:textAlignment="gravity" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Coordinates"
+        android:id="@+id/eqCoordinates"
+        android:textSize="12dp"
+        android:textAlignment="gravity"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_toStartOf="@+id/mapFragment"
+        android:layout_below="@+id/eqMagnitude"
+        android:layout_alignEnd="@+id/eqDate" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="date"
+        android:id="@+id/eqDate"
+        android:textSize="15dp"
+        android:textAlignment="gravity"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/mapFragment"
+        android:layout_alignEnd="@+id/eqMagnitude"
+        android:layout_below="@+id/eqCoordinates"
+        android:layout_above="@+id/eqUrl" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="URL"
+        android:id="@+id/eqUrl"
+        android:textAlignment="gravity"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_alignBottom="@+id/mapFragment"
+        android:layout_toStartOf="@+id/mapFragment"
+        android:layout_marginBottom="75dp" />
+
+    <fragment
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:name="com.javivaquero.earthquakeapp.fragments.EarthQuakesMapDetailFragment"
+        android:id="@+id/mapFragment"
+        android:layout_toEndOf="@+id/space"
+        android:layout_below="@+id/eqPlace"
+        android:layout_alignParentBottom="true" />
+
+    <Space
+        android:layout_width="20px"
+        android:layout_height="20px"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/space" />
+
+</RelativeLayout>

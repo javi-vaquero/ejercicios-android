@@ -1,17 +1,10 @@
-package com.javivaquero.earthquakeapp.services;
+package com.javivaquero.earthquakeapp.tasks;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.Service;
-import android.content.Intent;
-import android.media.RingtoneManager;
-import android.os.IBinder;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
-import com.javivaquero.earthquakeapp.MainActivity;
-import com.javivaquero.earthquakeapp.R;
-import com.javivaquero.earthquakeapp.database.EarthQuakeDB;
+import com.javivaquero.earthquakeapp.providers.EarthQuakeDB;
 import com.javivaquero.earthquakeapp.model.Coordinate;
 import com.javivaquero.earthquakeapp.model.EarthQuake;
 
@@ -27,31 +20,47 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class DownloadEarthQuakesService extends Service {
+/**
+ * Created by javi-vaquero on 25/03/15.
+ */
+public class DownloadEarthQuakesTask extends AsyncTask<String,EarthQuake,Integer> {
+
+    private EarthQuakeDB earthQuakeDB;
+
+    public interface AddEarthQuakeInterface{
+        public void notifyTotal(int total);
+    }
 
     private final String EARTHQUAKE = "EARTHQUAKE";
-    private EarthQuakeDB earthQuakeDB;
-    @Override
-    public void onCreate() {
-        super.onCreate();
 
-        earthQuakeDB = new EarthQuakeDB(this);
+    private AddEarthQuakeInterface target;
+
+    public DownloadEarthQuakesTask(Context context, AddEarthQuakeInterface target){
+        this.target=target;
+        earthQuakeDB = new EarthQuakeDB(context);
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        super.onStartCommand(intent, flags, startId);
-        Log.d("UPDATES","updating");
+    protected Integer doInBackground(String... urls) {
+        int count = 0;
+        if(urls.length>0) {
+            count = updateEarthQuakes(urls[0]);
+        }
 
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                updateEarthQuakes(getString(R.string.earthquakes_url));
-            }
-        });
-        t.start();
+        return new Integer(count);
+    }
 
-        return Service.START_STICKY;
+    @Override
+    protected void onProgressUpdate(EarthQuake... earthquakes) {
+        super.onProgressUpdate(earthquakes);
+
+    }
+
+    @Override
+    protected void onPostExecute(Integer count) {
+        super.onPostExecute(count);
+        target.notifyTotal(count.intValue());
+
     }
 
     private int updateEarthQuakes(String earthQuakeFeed) {
@@ -85,7 +94,6 @@ public class DownloadEarthQuakesService extends Service {
                     processEarthQuakeTask(earthquakes.getJSONObject(i));
                 }
 
-                sendNotification(count);
 
             }
         } catch (MalformedURLException e) {
@@ -100,38 +108,12 @@ public class DownloadEarthQuakesService extends Service {
 
     }
 
-    private void sendNotification(int count) {
-        Intent intentToFire = new Intent(this, MainActivity.class);
-        PendingIntent activityIntent = PendingIntent.getActivity(this, 0, intentToFire, 0);
-
-        Notification.Builder builder = new Notification.Builder(DownloadEarthQuakesService.this);
-        builder.setSmallIcon(R.drawable.ic_launcher)
-                    .setTicker(getString(R.string.app_name))
-                    .setContentText(getString(R.string.count_earthquakes, count))
-                    .setWhen(System.currentTimeMillis())
-                    .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
-                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                    .setVibrate(new	long[]{ 1000, 1000, 1000, 1000, 1000})
-                    .setContentIntent(activityIntent)
-                    .setAutoCancel(true);
-
-        Notification notification = builder.build();
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        int	NOTIFICATION_REF = 1;
-
-        notificationManager.notify(NOTIFICATION_REF, notification);
-
-    }
-
 
     private void processEarthQuakeTask(JSONObject jsonObject) {
         try {
             //Get coordinates
             JSONArray jsonCoords = jsonObject.getJSONObject("geometry").getJSONArray("coordinates");
-            //JSON provides first Longitude and then Latitude
-            Coordinate coords = new Coordinate(jsonCoords.getDouble(1), jsonCoords.getDouble(0),jsonCoords.getDouble(2));
+            Coordinate coords = new Coordinate(jsonCoords.getDouble(0), jsonCoords.getDouble(1),jsonCoords.getDouble(2));
 
             //Get properties
             JSONObject properties = jsonObject.getJSONObject("properties");
@@ -153,12 +135,5 @@ public class DownloadEarthQuakesService extends Service {
             e.printStackTrace();
         }
 
-    }
-
-
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
     }
 }

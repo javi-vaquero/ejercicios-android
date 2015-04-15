@@ -11,7 +11,7 @@ import android.util.Log;
 
 import com.javivaquero.earthquakeapp.MainActivity;
 import com.javivaquero.earthquakeapp.R;
-import com.javivaquero.earthquakeapp.database.EarthQuakeDB;
+import com.javivaquero.earthquakeapp.providers.EarthQuakeDB;
 import com.javivaquero.earthquakeapp.model.Coordinate;
 import com.javivaquero.earthquakeapp.model.EarthQuake;
 
