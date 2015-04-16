@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Created by javi-vaquero on 13/04/15.
  */
-public class EarthQuakesMapListFragment extends AbstractMapFragment{
+public class EarthQuakesMapListFragment extends AbstractMapFragment {
 
     private SharedPreferences prefs;
     private List<EarthQuake> earthquakes;

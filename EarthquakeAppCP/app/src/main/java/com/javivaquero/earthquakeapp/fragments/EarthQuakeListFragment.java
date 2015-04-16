@@ -68,16 +68,13 @@ public class EarthQuakeListFragment extends ListFragment implements LoaderManage
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         earthquakeDB = new EarthQuakeDB(getActivity());
-        //earthQuakeArrayList = new ArrayList<>();
+        earthQuakeArrayList = new ArrayList<>();
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout =  super.onCreateView(inflater, container, savedInstanceState);
-
-       // aa= new EarthQuakeArrayAdapter(getActivity(), R.layout.earthquake_item, earthQuakeArrayList);
-       // setListAdapter(aa);
 
         //adapter = new SimpleCursorAdapter(getActivity(), R.layout.earthquake_item, null, from, to, 0);
         adapter = new EarthQuakeSimpleCursorAdapter(getActivity(), R.layout.earthquake_item, null, from, to, 0);
@@ -109,8 +106,12 @@ public class EarthQuakeListFragment extends ListFragment implements LoaderManage
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
+        Cursor c = (Cursor) l.getItemAtPosition(position);
+        int index= c.getColumnIndex(EarthQuakesProvider.Columns._ID);
+        String strID = c.getString(index);
+
         Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
-        detailIntent.putExtra(EQ_ID, earthQuakeArrayList.get(position).get_id());
+        detailIntent.putExtra(EQ_ID, strID);
         startActivity(detailIntent);
     }
 
