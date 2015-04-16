@@ -1,8 +1,12 @@
 package com.javivaquero.earthquakeapp.fragments;
 
 import android.app.ListFragment;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import android.preference.PreferenceManager;
@@ -14,12 +18,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 import com.javivaquero.earthquakeapp.DetailActivity;
 import com.javivaquero.earthquakeapp.R;
 import com.javivaquero.earthquakeapp.adapters.EarthQuakeArrayAdapter;
+import com.javivaquero.earthquakeapp.adapters.EarthQuakeSimpleCursorAdapter;
 import com.javivaquero.earthquakeapp.providers.EarthQuakeDB;
 import com.javivaquero.earthquakeapp.model.EarthQuake;
+import com.javivaquero.earthquakeapp.providers.EarthQuakesProvider;
 import com.javivaquero.earthquakeapp.services.DownloadEarthQuakesService;
 
 import java.util.ArrayList;
@@ -32,9 +39,20 @@ import java.util.ArrayList;
  * Activities containing this fragment MUST implement the {@ link OnFragmentInteractionListener}
  * interface.
  */
-public class EarthQuakeListFragment extends ListFragment {
+public class EarthQuakeListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
     public static final String EQ_ID = "ID";
+
+    private static final int LOADER_ID = 1;
+
+    private LoaderManager.LoaderCallbacks<Cursor> mCallbacks;
+
+    private String[] from = { EarthQuakesProvider.Columns.TIME_KEY,
+            EarthQuakesProvider.Columns.MAGNITUDE_KEY,
+            EarthQuakesProvider.Columns.PLACE_KEY,
+            EarthQuakesProvider.Columns._ID };
+    private int[] to = { R.id.date, R.id.magnitude, R.id.place };
+    private SimpleCursorAdapter adapter;
 
 
     private SharedPreferences prefs;
@@ -50,7 +68,7 @@ public class EarthQuakeListFragment extends ListFragment {
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         earthquakeDB = new EarthQuakeDB(getActivity());
-        earthQuakeArrayList = new ArrayList<>();
+        //earthQuakeArrayList = new ArrayList<>();
 
     }
 
@@ -58,9 +76,17 @@ public class EarthQuakeListFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout =  super.onCreateView(inflater, container, savedInstanceState);
 
-        aa= new EarthQuakeArrayAdapter(getActivity(), R.layout.earthquake_item, earthQuakeArrayList);
-        setListAdapter(aa);
+       // aa= new EarthQuakeArrayAdapter(getActivity(), R.layout.earthquake_item, earthQuakeArrayList);
+       // setListAdapter(aa);
 
+        //adapter = new SimpleCursorAdapter(getActivity(), R.layout.earthquake_item, null, from, to, 0);
+        adapter = new EarthQuakeSimpleCursorAdapter(getActivity(), R.layout.earthquake_item, null, from, to, 0);
+        setListAdapter(adapter);
+
+        mCallbacks = this;
+
+        LoaderManager lm = getLoaderManager();
+        lm.initLoader(LOADER_ID, null, mCallbacks);
 
         return layout;
 
@@ -70,10 +96,12 @@ public class EarthQuakeListFragment extends ListFragment {
     public void onResume() {
         super.onResume();
 
-        double magnitude = new Double(prefs.getString(getString(R.string.PREF_MIN_MAGNITUDE), "0.0"));
+        /*double magnitude = new Double(prefs.getString(getString(R.string.PREF_MIN_MAGNITUDE), "0.0"));
         earthQuakeArrayList.clear();
         earthQuakeArrayList.addAll(earthquakeDB.getAllByMagnitude(magnitude));
-        aa.notifyDataSetChanged();
+        aa.notifyDataSetChanged();*/
+
+        getLoaderManager().restartLoader(LOADER_ID, null, mCallbacks);
 
     }
 
@@ -103,5 +131,32 @@ public class EarthQuakeListFragment extends ListFragment {
             getActivity().startService(download);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(getActivity());
+        String minMag = prefs.getString(
+                getResources().getString(R.string.PREF_MIN_MAGNITUDE), "0");
+
+        String where = EarthQuakesProvider.Columns.MAGNITUDE_KEY + " >= ? ";
+        String[] whereArgs = { minMag };
+        String order = EarthQuakesProvider.Columns.TIME_KEY + " DESC";
+
+        CursorLoader loader = new CursorLoader(getActivity(),
+                EarthQuakesProvider.CONTENT_URI, from, where, whereArgs, order);
+
+        return loader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+        adapter.swapCursor(cursor);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+        adapter.swapCursor(null);
     }
 }
